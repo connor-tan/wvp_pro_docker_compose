@@ -66,7 +66,7 @@ services:
       SIP_ID: ${SIP_ID}
       SIP_PASSWORD: ${SIP_PASSWORD}
       WVP_IP: ${WVP_IP}
-      WVP_IP: ${WVP_PORT}
+      WVP_PORT: ${WVP_PORT}
       SIP_IP: ${SIP_IP}
       SHOW_IP: ${SHOW_IP}
       SDP_IP: ${SDP_IP}
