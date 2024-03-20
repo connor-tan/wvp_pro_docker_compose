@@ -1,0 +1,140 @@
+version: "3"
+
+services:
+  # 基础服务，可根据情况替换成第三方
+  wvp_redis:
+    container_name: wvp_redis
+    build:
+      context: ./buildFiles/redis
+      dockerfile: Dockerfile
+    image: wvp_redis
+    restart: always
+    environment:
+      TZ: ${TZ}
+    # 端口映射，非必要
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ${REDIS_DATA}:/home/redis/data
+      - ${REDIS_LOGS}:/logs
+      - ${REDIS_CONFIG}:/home/redis/redis.conf
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    command: redis-server /home/redis/redis.conf
+  wvp_mysql:
+    container_name: wvp_mysql
+    build:
+      context: ./buildFiles/mysql
+      dockerfile: Dockerfile
+    image: wvp_mysql
+    restart: always # 指定开机重启
+    command: 
+      --default-authentication-plugin=mysql_native_password 
+      --character-set-server=utf8mb4 
+      --collation-server=utf8mb4_unicode_ci 
+      --explicit_defaults_for_timestamp=true 
+      --lower_case_table_names=1
+      --max_allowed_packet=128M;
+    # 端口映射，非必要
+    ports:
+      - "${MYSQL_PORT}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+    volumes:
+      - ${MYSQL_CONFIG}:/etc/mysql/conf.d
+      - ${MYSQL_LOGS}:/logs
+      - ${MYSQL_DATA}:/var/lib/mysql:rw # 挂载数据目录
+    healthcheck:
+      test: [ "CMD-SHELL","/home/healthcheck.sh" ]
+      timeout: 20s
+      retries: 20
+  wvp:
+    container_name: wvp
+    image: wvp
+    build:
+      context: ./buildFiles/wvp
+      dockerfile: Dockerfile
+    environment:
+      TZ: ${TZ}
+      SIP_DOMAIN: ${SIP_DOMAIN}
+      SIP_ID: ${SIP_ID}
+      SIP_PASSWORD: ${SIP_PASSWORD}
+      WVP_IP: ${WVP_IP}
+      SIP_IP: ${SIP_IP}
+      SHOW_IP: ${SHOW_IP}
+      SDP_IP: ${SDP_IP}
+      ZLM_IP: ${ZLM_IP}
+      WVP_DB_PATH: ${WVP_DB_PATH}
+      MYSQL_USERNAME: ${MYSQL_USERNAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PWD: ${REDIS_PASSWORD}
+      ASSIST_PORT: ${ASSIST_PORT}
+      STREAM_HOST: ${STREAM_HOST}
+      DRUID_USER: ${DRUID_USER}
+      DRUID_PASS: ${DRUID_PASS}
+      JT1078_PORT: ${JT1078_PORT}
+      JT1078_PASS: ${JT1078_PASS}
+    ports:
+      - "5060:5060"
+      - "5060:5060/udp"
+      - ${JT1078_PORT}:${JT1078_PORT}
+      - ${JT1078_PORT}:${JT1078_PORT}/udp
+      - ${WVP_PORT}:18080
+
+    volumes:
+      - ${BASE_PATH}/config/wvp:/opt/wvp/config
+      - ${BASE_PATH}/logs/wvp:/opt/wvp/logs # 保存wvp日志
+    healthcheck:
+      test: [ "CMD", "curl", "-sS", "http://localhost:18080" ]
+      timeout: 10s
+      retries: 10
+    depends_on:
+      zlm:
+        condition: service_healthy
+      wvp_mysql:
+        condition: service_healthy
+      wvp_redis:
+        condition: service_healthy
+  zlm:
+    container_name: zlm
+    image: zlm
+    build:
+      context: ./buildFiles/zlm
+      dockerfile: Dockerfile
+    environment:
+      TZ: ${TZ}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PWD: ${REDIS_PASSWORD}
+    ports:
+      - "554:554/tcp"
+      - "554:554/udp"
+      - "443:443"
+      - "9000:9000"
+      - "322:322"
+      - "80:80" # 如果zlm的config.ini文件中端口改变，请同步改变此值
+      - "10000:10000/tcp"
+      - "10000:10000/udp"
+      - "${ASSIST_PORT}:18081"
+      - "30000:30500/udp"
+      - "30000:30500/tcp"
+    volumes:
+      - ${BASE_PATH}/config/zlm:/config
+      - ${RECORD_PATH}:/media/record:rw # 录像保存目录
+      - ${BASE_PATH}/logs/zlm/assist:/opt/assist/logs # 保存assist日志
+      - ${BASE_PATH}/logs/zlm/media:/opt/media/log # 保存zlm日志
+    healthcheck:
+      test: [ "CMD", "curl", "-sS", "http://localhost:18081" ]
+      timeout: 10s
+      retries: 10
+    depends_on:
+      wvp_redis: 
+        condition: service_healthy

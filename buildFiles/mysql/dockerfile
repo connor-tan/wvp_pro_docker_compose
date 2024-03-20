@@ -1,0 +1,13 @@
+# 基础镜像
+FROM mysql
+# author
+MAINTAINER fanttec
+
+# 执行sql脚本
+ADD ./db/init.sql /docker-entrypoint-initdb.d/init.sql
+ADD ./healthcheck.sh /home/healthcheck.sh
+
+RUN chown -R mysql:mysql /docker-entrypoint-initdb.d/init.sql 
+RUN chmod +x /home/healthcheck.sh
+EXPOSE 3306
+CMD ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]

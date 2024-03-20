@@ -1,0 +1,9 @@
+# 基础镜像
+FROM redis
+# author
+MAINTAINER fanttec
+
+# 创建目录
+RUN mkdir -p /home/redis/data
+# 指定路径
+WORKDIR /home/redis
