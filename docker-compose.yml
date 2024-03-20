@@ -87,7 +87,7 @@ services:
       - "5060:5060/udp"
       - ${JT1078_PORT}:${JT1078_PORT}
       - ${JT1078_PORT}:${JT1078_PORT}/udp
-      - ${WVP_PORT}:18080
+      - ${WVP_PORT}:${WVP_PORT}
 
     volumes:
       - ${BASE_PATH}/config/wvp:/opt/wvp/config
@@ -120,10 +120,10 @@ services:
       - "443:443"
       - "9000:9000"
       - "322:322"
-      - "80:80" # 如果zlm的config.ini文件中端口改变，请同步改变此值
+      - "${ZLM_PORT}:${ZLM_PORT}" # 如果zlm的config.ini文件中端口改变，请同步改变此值
       - "10000:10000/tcp"
       - "10000:10000/udp"
-      - "${ASSIST_PORT}:18081"
+      - "${ASSIST_PORT}:${ASSIST_PORT}"
       - "30000:30500/udp"
       - "30000:30500/tcp"
     volumes:
