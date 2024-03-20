@@ -1,0 +1,2 @@
+# wvp_pro_docker_compose
+这个仓库独立了wvp_pro中需要用到的组件，分别部署
