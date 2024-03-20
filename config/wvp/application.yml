@@ -52,7 +52,7 @@ mybatis:
 
 # [可选] WVP监听的HTTP端口, 网页和接口调用都是这个端口
 server:
-  port: ${WVP_IP}
+  port: ${WVP_PORT}
   # [可选] HTTPS配置， 默认不开启
   # 不启用自带的SSL, 建议使用反向代理
   ssl:
