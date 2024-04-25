@@ -125,8 +125,7 @@ services:
       - "10000:10000/tcp"
       - "10000:10000/udp"
       - "${ASSIST_PORT}:${ASSIST_PORT}"
-      - "30000:30500/udp"
-      - "30000:30500/tcp"
+      - "30000-30500:3000-30500/udp"
     volumes:
       - ${BASE_PATH}/config/zlm:/config
       - ${RECORD_PATH}:/opt/media/record:rw # 录像保存目录
