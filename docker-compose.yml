@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   # 基础服务，可根据情况替换成第三方
