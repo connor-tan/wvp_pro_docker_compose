@@ -14,7 +14,7 @@ spring:
 
 # [必选] WVP监听的HTTP端口, 网页和接口调用都是这个端口
 server:
-  port: 18081
+  port: ${ASSIST_PORT:18081}
   # [可选] HTTPS配置， 默认不开启
   ssl:
     # [可选] 是否开启HTTPS访问
