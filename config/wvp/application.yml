@@ -217,6 +217,6 @@ user-settings:
 # 关闭在线文档（生产环境建议关闭）
 springdoc:
   api-docs:
-    enabled: false
+    enabled: true
   swagger-ui:
-    enabled: false
+    enabled: true
