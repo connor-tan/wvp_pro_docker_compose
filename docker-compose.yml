@@ -122,7 +122,7 @@ services:
       - "${ZLM_PORT}:80" # 如果zlm的config.ini文件中端口改变，请同步改变此值
       - "10000:10000/tcp"
       - "10000:10000/udp"
-      - "${ASSIST_PORT}:${ASSIST_PORT}"
+      - "${ASSIST_PORT}:18081"
       - "30000-30500:30000-30500/udp"
     volumes:
       - ${BASE_PATH}/config/zlm:/config
