@@ -1,9 +1,17 @@
 spring:
+  # 设置接口超时时间
+  mvc:
+    async:
+      request-timeout: 20000
+  thymeleaf:
+    cache: false
   # [可选]上传文件大小限制
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
+  cache:
+    type: redis
   # REDIS数据库配置
   redis:
     # [必须修改] Redis服务器IP, REDIS安装在本机的,使用127.0.0.1
@@ -16,12 +24,6 @@ spring:
     password: ${REDIS_PWD:}
     # [可选] 超时时间
     timeout: 10000
-    # [可选] 一个pool最多可分配多少个jedis实例
-    poolMaxTotal: 1000
-    # [可选] 一个pool最多有多少个状态为idle(空闲)的jedis实例
-    poolMaxIdle: 500
-    # [可选] 最大的等待时间(秒)
-    poolMaxWait: 5
   # [必选] jdbc数据库配置
   datasource:
     dynamic:
@@ -40,16 +42,6 @@ spring:
             minimum-idle: 5                       # 连接池最小空闲连接数
             idle-timeout: 300000                  # 允许连接在连接池中空闲的最长时间（以毫秒为单位）
             max-lifetime: 1200000                 # 是池中连接关闭后的最长生命周期（以毫秒为单位)
-
-# 修改为数据库字段下划线分隔直接对应java驼峰命名
-mybatis:
-    configuration:
-        map-underscore-to-camel-case: true
-
-# 修改分页插件为 postgresql， 数据库类型为mysql不需要
-#pagehelper:
-#    helper-dialect: postgresql
-
 # [可选] WVP监听的HTTP端口, 网页和接口调用都是这个端口
 server:
   port: ${WVP_PORT}
@@ -64,11 +56,6 @@ server:
     key-store-password: password
     # [可选] 证书类型， 默认为jks，根据实际修改
     key-store-type: JKS
-    # 配置证书可以使用如下两项，如上面二选一即可
-    # PEM 编码证书
-    certificate: xx.pem
-    #   私钥文件
-    certificate-private-key: xx.key
 
 # 作为28181服务器的配置
 sip:
