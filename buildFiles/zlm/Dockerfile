@@ -1,6 +1,15 @@
 FROM ubuntu:22.04   as   build
 ARG assistGitUrl="https://gitee.com/pan648540858/wvp-pro-assist.git"
 ARG zlmGitUrl="https://gitee.com/xia-chu/ZLMediaKit.git"
+EXPOSE 9000/tcp
+EXPOSE 1935/tcp
+EXPOSE 554/tcp
+EXPOSE 322/tcp
+EXPOSE 80/tcp
+EXPOSE 443/tcp
+EXPOSE 10000/udp
+EXPOSE 10000/tcp
+
 # COPY sources.list /etc/apt/sources.list	
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt-get update && \
