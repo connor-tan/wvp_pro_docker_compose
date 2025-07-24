@@ -104,10 +104,7 @@ services:
         condition: service_healthy
   zlm:
     container_name: zlm
-    image: zlm
-    build:
-      context: ./buildFiles/zlm
-      dockerfile: Dockerfile
+    image: zlmediakit/zlmediakit:master
     environment:
       TZ: ${TZ}
       REDIS_HOST: ${REDIS_HOST}
@@ -118,7 +115,11 @@ services:
       - "554:554/tcp"
       - "554:554/udp"
       - "443:443"
+      - "8000:8000"
+      - "8000:8000/udp"
+      - "1935:1935"
       - "9000:9000"
+      - "9000:9000/udp"
       - "322:322"
       - "${ZLM_PORT}:${ZLM_PORT}" # 如果zlm的config.ini文件中端口改变，请同步改变此值
       - "10000:10000/tcp"
