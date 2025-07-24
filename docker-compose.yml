@@ -128,7 +128,7 @@ services:
       - "30000-30500:30000-30500/udp"
     volumes:
       - ${BASE_PATH}/config/zlm:/config
-      - ${RECORD_PATH}:/opt/media/record:rw # 录像保存目录
+      - ${RECORD_PATH}:/opt/media/record:rw # 录像保存目录  /opt/wvp/config这个地址如果需要更改，请同步更改wvp中的application.yml文件中的media.record-path
       - ${BASE_PATH}/logs/zlm/assist:/opt/assist/logs # 保存assist日志
       - ${BASE_PATH}/logs/zlm/media:/opt/media/log # 保存zlm日志
     healthcheck:
