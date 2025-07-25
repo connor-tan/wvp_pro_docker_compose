@@ -2,10 +2,7 @@ services:
   # 基础服务，可根据情况替换成第三方
   wvp_redis:
     container_name: wvp_redis
-    build:
-      context: ./buildFiles/redis
-      dockerfile: Dockerfile
-    image: wvp_redis
+    image: redis
     restart: always
     environment:
       TZ: ${TZ}
@@ -15,7 +12,10 @@ services:
     volumes:
       - ${REDIS_DATA}:/data
       - ${REDIS_LOGS}:/logs
-      - ${REDIS_CONFIG}:/home/redis/redis.conf:ro
+      - ${REDIS_CONFIG}:/usr/local/etc/redis/redis.conf:ro
+    command:
+      - redis-server
+      - "/usr/local/etc/redis/redis.conf"
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
