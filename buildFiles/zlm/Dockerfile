@@ -1,5 +1,8 @@
 FROM zlmediakit/zlmediakit:master
 ARG assistGitUrl="https://gitee.com/pan648540858/wvp-pro-assist.git"
+
+LABEL Author=connor
+
 # COPY sources.list /etc/apt/sources.list	
 RUN export DEBIAN_FRONTEND=noninteractive && \
         apt update && \

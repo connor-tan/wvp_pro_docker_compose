@@ -1,7 +1,7 @@
 # 基础镜像
 FROM mysql
 # author
-MAINTAINER connor
+LABEL Author=connor
 
 # 执行sql脚本
 ADD ./db/init.sql /docker-entrypoint-initdb.d/init.sql

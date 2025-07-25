@@ -1,4 +1,5 @@
 FROM ubuntu:jammy AS build
+LABEL Author=connor
 
 ARG gitUrl="https://gitee.com/pan648540858/wvp-GB28181-pro.git"
 
@@ -10,7 +11,7 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
         mkdir -p /opt/wvp/config
 
 COPY settings.xml /usr/share/maven/conf/
-COPY run-wvp.sh /opt/wvp/config/
+COPY run-wvp.sh /opt/wvp/
 
 RUN cd /home && \
         git clone "${gitUrl}"
@@ -45,6 +46,6 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
 
 COPY --from=build /opt /opt
 
-WORKDIR /opt/wvp/config
+WORKDIR /opt/wvp
 
 CMD ["bash", "run-wvp.sh"]
