@@ -1,8 +1,8 @@
-FROM ubuntu:22.04   as   build
+FROM ubuntu:jammy AS build
 
 ARG gitUrl="https://gitee.com/pan648540858/wvp-GB28181-pro.git"
 
-# COPY sources.list /etc/apt/sources.list
+#COPY sources.list /etc/apt/sources.list
 
 RUN export DEBIAN_FRONTEND=noninteractive &&\
         apt-get update && \
@@ -10,14 +10,15 @@ RUN export DEBIAN_FRONTEND=noninteractive &&\
         mkdir -p /opt/wvp/config
 
 COPY settings.xml /usr/share/maven/conf/
+COPY run-wvp.sh /opt/wvp/config/
 
 RUN cd /home && \
         git clone "${gitUrl}"
 
 # 构建前端
-RUN cd /home/wvp-GB28181-pro/web_src && \
+RUN cd /home/wvp-GB28181-pro/web && \
         npm --registry=https://registry.npmmirror.com install && \
-        npm run build && \
+        npm run build:prod && \
         # 删除node_modules, 前端完成Build后不再需要, 减小体积
         rm -rf node_modules
 
@@ -28,7 +29,7 @@ RUN cd /home/wvp-GB28181-pro && \
         cp -r /home/wvp-GB28181-pro/src/main/resources/banner.txt /opt/wvp/config/banner.txt
 
 
-FROM ubuntu:22.04
+FROM ubuntu:jammy
 
 ENV LC_ALL zh_CN.UTF-8
 
