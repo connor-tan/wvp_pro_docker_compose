@@ -1,5 +1,5 @@
 # 基础镜像
-FROM mysql
+FROM mysq:8.4.7
 # author
 LABEL Author=connor
 
